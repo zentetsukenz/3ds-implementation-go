@@ -1,11 +1,19 @@
-package main
+package payment
+
+import "log"
 
 // const (
 // 	OmisePublicKey = "pkey_test_"
 // 	OmiseSecretKey = "skey_test_"
 // )
 
-func checkout(_token string) {
+type Token struct {
+	omiseToken  string
+	omiseSource string
+}
+
+func Checkout(token Token) {
+	log.Printf("got token %+v", token)
 	// client, e := omise.NewClient(OmisePublicKey, OmiseSecretKey)
 	// if e != nil {
 	// 	log.Fatal(e)

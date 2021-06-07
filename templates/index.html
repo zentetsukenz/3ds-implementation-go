@@ -7,7 +7,7 @@
 
 <body>
   <div>
-    <form id="checkoutForm" method="POST" action="/checkout.php">
+    <form id="checkoutForm" method="POST" action="/checkout">
       <input type="hidden" name="omiseToken">
       <input type="hidden" name="omiseSource">
       <button type="submit" id="checkoutButton">Pay</button>
@@ -18,7 +18,7 @@
 
     <script>
       OmiseCard.configure({
-        publicKey: "pkey_test_"
+        publicKey: "pkey_test_5bbllim7xg2la5kgn9n"
       });
 
       var button = document.querySelector("#checkoutButton");
