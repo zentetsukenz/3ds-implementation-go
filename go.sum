@@ -1,6 +1,4 @@
 github.com/gorilla/schema v1.2.0 h1:YufUaxZYCKGFuAq3c96BOhjgd5nmXiOY9NGzF247Tsc=
 github.com/gorilla/schema v1.2.0/go.mod h1:kgLaKoK1FELgZqMAVxx/5cbj0kT+57qxUrAlIO2eleU=
-github.com/mitchellh/mapstructure v1.4.1 h1:CpVNEelQCZBooIPDn+AR3NpivK/TIKU8bDxdASFVQag=
-github.com/mitchellh/mapstructure v1.4.1/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/omise/omise-go v1.0.7 h1:dqPCmvudSzA4HORqbDKvu45mIYaD2jk4TFgZWU2/DtU=
 github.com/omise/omise-go v1.0.7/go.mod h1:zAupNC0wZf+QJ/yz+d39z4g8k4UEeFZP7GhiZZTq5XY=
