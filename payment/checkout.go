@@ -29,13 +29,13 @@ func Checkout(token Token) (*omise.Charge, error) {
 
 	charge, createCharge := &omise.Charge{}, &operations.CreateCharge{
 		Amount:      100000,
+		Card:        token.OmiseToken,
 		Currency:    "thb",
-		ReturnURI:   fmt.Sprintf("http://localhost:8080/complete?order_id=%s", token.OmiseToken),
 		Description: "Test payment from som-m/3ds-implementation-go",
+		ReturnURI:   fmt.Sprintf("http://localhost:8080/complete?order_id=%s", token.OmiseToken),
 		Metadata: map[string]interface{}{
 			"order_id": token.OmiseToken,
 		},
-		Card: token.OmiseToken,
 	}
 
 	if e := client.Do(charge, createCharge); e != nil {
