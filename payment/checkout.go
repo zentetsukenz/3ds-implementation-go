@@ -1,44 +1,49 @@
 package payment
 
-import "log"
+import (
+	"fmt"
+	"log"
 
-// const (
-// 	OmisePublicKey = "pkey_test_"
-// 	OmiseSecretKey = "skey_test_"
-// )
+	"github.com/omise/omise-go"
+	"github.com/omise/omise-go/operations"
+)
+
+const (
+	OmisePublicKey = "pkey_test_"
+	OmiseSecretKey = "skey_test_"
+)
 
 type Token struct {
-	omiseToken  string
-	omiseSource string
+	OmiseToken  string
+	OmiseSource string
 }
 
-func Checkout(token Token) {
+func Checkout(token Token) (*omise.Charge, error) {
 	log.Printf("got token %+v", token)
-	// client, e := omise.NewClient(OmisePublicKey, OmiseSecretKey)
-	// if e != nil {
-	// 	log.Fatal(e)
-	// }
 
-	// card, createToken := &omise.Card{}, &operations.CreateToken{
-	// 	Name:            "Test Test",
-	// 	Number:          "4242424242424242",
-	// 	ExpirationMonth: 10,
-	// 	ExpirationYear:  2022,
-	// 	SecurityCode:    "123",
-	// }
+	client, e := omise.NewClient(OmisePublicKey, OmiseSecretKey)
+	if e != nil {
+		log.Fatal(e)
+		return nil, e
+	}
 
-	// if e := client.Do(card, createToken); e != nil {
-	// 	log.Fatalln(e)
-	// }
+	charge, createCharge := &omise.Charge{}, &operations.CreateCharge{
+		Amount:      100000,
+		Currency:    "thb",
+		ReturnURI:   fmt.Sprintf("http://localhost:8080/complete?order_id=%s", token.OmiseToken),
+		Description: "Test payment from som-m/3ds-implementation-go",
+		Metadata: map[string]interface{}{
+			"order_id": token.OmiseToken,
+		},
+		Card: token.OmiseToken,
+	}
 
-	// charge, createCharge := &omise.Charge{}, &operations.CreateCharge{
-	// 	Amount:   100000,
-	// 	Currency: "thb",
-	// 	Card:     card.ID,
-	// }
-	// if e := client.Do(charge, createCharge); e != nil {
-	// 	log.Fatal(e)
-	// }
+	if e := client.Do(charge, createCharge); e != nil {
+		log.Fatal(e)
+		return nil, e
+	}
 
-	// log.Printf("charge: %s  amount: %s %d\n", charge.ID, charge.Currency, charge.Amount)
+	log.Printf("charge: %+v\n", charge)
+
+	return charge, nil
 }

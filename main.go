@@ -1,12 +1,16 @@
 package main
 
 import (
-	"fmt"
+	"go/payment"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/schema"
+	"github.com/omise/omise-go"
 )
+
+var decoder = schema.NewDecoder()
 
 func indexPage(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("templates/index.html")
@@ -14,23 +18,36 @@ func indexPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func checkoutPage(w http.ResponseWriter, r *http.Request) {
-	// var t payment.Token
-
-	body, err := ioutil.ReadAll(r.Body)
+	err := r.ParseForm()
 	if err != nil {
-		log.Printf("Error reading body: %v", err)
+		log.Printf("Error parsing body: %v", err)
 		http.Error(w, "can't read body", http.StatusBadRequest)
+
 		return
 	}
 
-	fmt.Printf("body: %+v", body)
+	var (
+		t      payment.Token
+		charge *omise.Charge
+	)
 
-	// err := json.NewDecoder(r.Body).Decode(&t)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	err = decoder.Decode(&t, r.PostForm)
+	if err != nil {
+		log.Printf("Error decoding body: %v", err)
+		http.Error(w, "can't decode body", http.StatusInternalServerError)
 
-	// payment.Checkout(t)
+		return
+	}
+
+	charge, err = payment.Checkout(t)
+	if err != nil {
+		log.Printf("Error making a charge: %v", err)
+		http.Error(w, "cannot charge", http.StatusBadGateway)
+
+		return
+	}
+
+	http.Redirect(w, r, charge.AuthorizeURI, http.StatusSeeOther)
 }
 
 func main() {
